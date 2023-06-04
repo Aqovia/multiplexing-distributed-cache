@@ -6,13 +6,13 @@
     <RootNamespace>Aqovia.MultiplexingDistributedCache</RootNamespace>
     <AssemblyName>Aqovia.MultiplexingDistributedCache</AssemblyName>
     <PackageId>Aqovia.MultiplexingDistributedCache</PackageId>
-    <Version>1.0.2</Version>
+    <VersionPrefix>0.1.0</VersionPrefix>
     <Authors>Aqovia</Authors>
     <Company>Aqovia</Company>
     <Product>Aqovia.MultiplexingDistributedCache</Product>
     <Description>Multiplexing distributed cache implementation of Microsoft.Extensions.Caching.Distributed.IDistributedCache using other two primary and secondary implementation of IDistributedCache</Description>
     <PackageTags>cache distributedcache</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Copyright>© Aqovia UK Ltd. All rights reserved.</Copyright>
     <PackageProjectUrl>https://github.com/aqovia/multiplexing-distributed-cache</PackageProjectUrl>
     <RepositoryUrl>https://github.com/aqovia/multiplexing-distributed-cache</RepositoryUrl>

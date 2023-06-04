@@ -1,0 +1,59 @@
+name: Publish NuGet package
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build NuGet package
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1
+
+      - name: setup-dotnet@v1
+        uses: actions/setup-dotnet@v1
+
+      - id: get-suffix
+        name: Get package version suffix
+        run: |
+          $packageVersionSuffix = ""
+
+          $branchName = ""
+          if ($env:GITHUB_REF -match "refs/heads/(.*)") {
+            $branchName = $Matches[1]
+          }
+
+          if ($branchName -ne "master" -and $branchName -ne "main" -and $branchName -ne "mvp") {
+            $packageVersionSuffix = "preview-$env:GITHUB_RUN_ID"
+          }
+          echo "package-version-suffix=$packageVersionSuffix" >> $env:GITHUB_OUTPUT
+        shell: pwsh
+
+      - name: Build
+        run: |
+          cd src/MultiplexingRedisCache
+          dotnet build --configuration Release
+
+      - name: Test
+        run: |
+          cd src/MultiplexingRedisCache
+          dotnet test
+
+      - name: Pack
+        run: |
+          cd src/MultiplexingRedisCache
+          if ($package_version_suffix){
+            & dotnet pack --configuration Release --no-build --no-restore --version-suffix $package_version_suffix
+          } else {
+            & dotnet pack --configuration Release --no-build --no-restore
+          }
+        env:
+          package_version_suffix: ${{ steps.get-suffix.outputs.package-version-suffix }}
+        shell: pwsh
+
+      - name: Push NuGet package to nuget.org
+        run: >
+          dotnet nuget push ./src/MultiplexingRedisCache/bin/Release/*.nupkg
+          --skip-duplicate
+          --source https://api.nuget.org/v3/index.json
+          --api-key ${{ secrets.NUGET_ORG_PUBLISH_API_KEY }}
