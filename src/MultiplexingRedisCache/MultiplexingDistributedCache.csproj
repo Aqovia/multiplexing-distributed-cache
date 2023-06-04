@@ -6,7 +6,7 @@
     <RootNamespace>Aqovia.MultiplexingDistributedCache</RootNamespace>
     <AssemblyName>Aqovia.MultiplexingDistributedCache</AssemblyName>
     <PackageId>Aqovia.MultiplexingDistributedCache</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>Aqovia</Authors>
     <Company>Aqovia</Company>
     <Product>Aqovia.MultiplexingDistributedCache</Product>
@@ -14,8 +14,8 @@
     <PackageTags>cache distributedcache</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Copyright>© Aqovia UK Ltd. All rights reserved.</Copyright>
-    <PackageProjectUrl>https://github.com/aqovia/aspnet-multiplexing-distributed-cache</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/aqovia/aspnet-multiplexing-distributed-cache</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/aqovia/multiplexing-distributed-cache</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/aqovia/multiplexing-distributed-cache</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
