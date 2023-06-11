@@ -1,6 +1,6 @@
 # Aqovia Multiplexing Distributed Cache
 
-Aqovia.MultiplexingDistributedCache is a library that implements a IDistributedCache that multiplexes between two other implementations of IDistributedCache, primary and secondary. While the secondary is options that makes it act as only a primary cache.
+Aqovia.MultiplexingDistributedCache is a library that implements a IDistributedCache that multiplexes between two other implementations of IDistributedCache, primary and secondary. While the secondary is optional that makes this library act as only a primary cache.
 
 ## How to use
 
@@ -19,7 +19,7 @@ using StackExchange.Redis;
 using Microsoft.Extensions.Caching.Memory;
 ```
 
-than in its `ConfigureServices` method:
+then in its `ConfigureServices` method:
 
 ```cs
 public void ConfigureServices(IServiceCollection services)
@@ -32,13 +32,14 @@ public void ConfigureServices(IServiceCollection services)
 
     var secondaryRedisCache = new MemoryCache(new MemoryCacheOptions() { });
 
-    services.AddSingleton<IDistributedCache>(new MultiplexingDistributedCache(primaryRedisCache, secondaryRedisCache));
+    services.AddSingleton<IDistributedCache>(
+        new MultiplexingDistributedCache(primaryRedisCache, secondaryRedisCache));
     services.AddSession();
     ...
 }
 ```
 
-You can have only a Primary cache, because secondary is optional:
+You can also have only a Primary cache:
 
 ```cs
 public void ConfigureServices(IServiceCollection services)
@@ -68,14 +69,16 @@ public void ConfigureServices(IServiceCollection services)
 
     IDistributedCache secondaryRedisCache = null;
     var secondaryRedisConnectionString = Configuration.GetConnectionString("SecondaryRedisCacheConnectionString");
-    if (!string.IsNullOrEmpty(secondaryRedisConnectionString) && !secondaryRedisConnectionString.Equals(primaryRedisConnectionString))
+    if (!string.IsNullOrEmpty(secondaryRedisConnectionString) &&
+        !secondaryRedisConnectionString.Equals(primaryRedisConnectionString))
     {
         var secondaryRedisConfig = ConfigurationOptions.Parse(secondaryRedisConnectionString);
         var secondaryRedisConnectionMultiplexer = ConnectionMultiplexer.Connect(secondaryRedisConfig);
         secondaryRedisCache = new RedisCache(new RedisCacheOptions() { ConfigurationOptions = secondaryRedisConfig });
     }
 
-    services.AddSingleton<IDistributedCache>(new MultiplexingDistributedCache(primaryRedisCache, secondaryRedisCache));
+    services.AddSingleton<IDistributedCache>(
+        new MultiplexingDistributedCache(primaryRedisCache, secondaryRedisCache));
     services.AddSession();
     ...
 }
@@ -95,7 +98,7 @@ Or any similar reasons. And you want to do this without losing your users' sessi
 1. Provision your new Redis instance
 2. Change your application to use Aqovia.MultiplexingDistributedCache with the primary to be your current Redis instance, and secondary to be the new Redis instance
 3. Wait for a while until the first session after you have done the action 2, is expired. This means both Redis instances should have the same data.
-4. Change your application, so that the primary cache is your new Redis instance and secondary is the ole one.
+4. Change your application, so that the primary cache is your new Redis instance and secondary is the old one.
 5. Change your application, so that the primary cache is your new Redis instance and you don't have a secondary cache. At this stage your app will work like before but with the new Redis instance.
 6. Now you can remove your old Redis instance.
 
