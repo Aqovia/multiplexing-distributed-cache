@@ -33,7 +33,7 @@ jobs:
           if ($branchName -eq "master" -or $branchName -eq "main") {
             echo "This is the default branch, so no package version suffix will be used."
           } else {
-            $packageVersionSuffix = "preview-$env:GITHUB_RUN_ID"
+            $packageVersionSuffix = "preview-$env:GITHUB_RUN_NUMBER.$env:GITHUB_RUN_ATTEMPT.$env:GITHUB_RUN_ID"
             echo "This is not the default branch, so a package version suffix: [$packageVersionSuffix] will be used."
           }
 
