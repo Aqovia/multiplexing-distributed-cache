@@ -1,0 +1,71 @@
+name: Publish NuGet package
+
+on: [push, pull_request]
+
+defaults:
+  run:
+    shell: pwsh
+
+env:
+  ProjectPath: src/MultiplexingDistributedCache
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build NuGet package
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1
+
+      - name: setup-dotnet
+        uses: actions/setup-dotnet@v3
+
+      - id: get-suffix
+        name: Get package version suffix
+        run: |
+          $packageVersionSuffix = ""
+
+          $branchName = ""
+          if ($env:GITHUB_REF -match "refs/heads/(.*)") {
+            $branchName = $Matches[1]
+          }
+
+          if ($branchName -eq "master" -or $branchName -eq "main") {
+            echo "This is the default branch, so no package version suffix will be used."
+          } else {
+            $packageVersionSuffix = "preview-$env:GITHUB_RUN_NUMBER.$env:GITHUB_RUN_ATTEMPT.$env:GITHUB_RUN_ID"
+            echo "This is not the default branch, so a package version suffix: [$packageVersionSuffix] will be used."
+          }
+
+          echo "package-version-suffix=$packageVersionSuffix" >> $env:GITHUB_OUTPUT
+
+      - name: dotnet build
+        run: |
+          cd $env:ProjectPath
+          & dotnet build --configuration Release
+
+      - name: dotnet test
+        run: |
+          cd $env:ProjectPath
+          & dotnet test
+
+      - name: dotnet pack
+        run: |
+          cd $env:ProjectPath
+          $suffix = $env:packageVersionSuffix
+          if ($suffix){
+            echo "Using version suffix: [$suffix]"
+            & dotnet pack --configuration Release --no-build --no-restore --version-suffix $suffix
+          } else {
+            & dotnet pack --configuration Release --no-build --no-restore
+          }
+        env:
+          packageVersionSuffix: ${{ steps.get-suffix.outputs.package-version-suffix }}
+        shell: pwsh
+
+      - name: dotnet nuget push to nuget.org
+        run: >
+          & dotnet nuget push ./$env:ProjectPath/bin/Release/*.nupkg
+          --skip-duplicate
+          --source https://api.nuget.org/v3/index.json
+          --api-key ${{ secrets.NUGET_ORG_PUBLISH_API_KEY }}
