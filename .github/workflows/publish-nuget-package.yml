@@ -10,7 +10,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v1
 
-      - name: setup-dotnet@v1
+      - name: setup-dotnet
         uses: actions/setup-dotnet@v3
 
       - id: get-suffix
@@ -33,17 +33,17 @@ jobs:
           echo "package-version-suffix=$packageVersionSuffix" >> $env:GITHUB_OUTPUT
         shell: pwsh
 
-      - name: Build
+      - name: dotnet build
         run: |
           cd src/MultiplexingDistributedCache
           dotnet build --configuration Release
 
-      - name: Test
+      - name: dotnet test
         run: |
           cd src/MultiplexingDistributedCache
           dotnet test
 
-      - name: Pack
+      - name: dotnet pack
         run: |
           cd src/MultiplexingDistributedCache
           if ($package_version_suffix){
@@ -55,7 +55,7 @@ jobs:
           package_version_suffix: ${{ steps.get-suffix.outputs.package-version-suffix }}
         shell: pwsh
 
-      - name: Push NuGet package to nuget.org
+      - name: dotnet nuget push to nuget.org
         run: >
           dotnet nuget push ./src/MultiplexingDistributedCache/bin/Release/*.nupkg
           --skip-duplicate
