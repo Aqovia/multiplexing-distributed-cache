@@ -23,9 +23,13 @@ jobs:
             $branchName = $Matches[1]
           }
 
-          if ($branchName -ne "master" -and $branchName -ne "main" -and $branchName -ne "mvp") {
+          if ($branchName -eq "master" -or $branchName -eq "main") {
+            Write-Host "This is the default branch, so no package version suffix will be used."
+          } else {
+            Write-Host "This is not the default branch, so a package version suffix will be used."
             $packageVersionSuffix = "preview-$env:GITHUB_RUN_ID"
           }
+
           echo "package-version-suffix=$packageVersionSuffix" >> $env:GITHUB_OUTPUT
         shell: pwsh
 
