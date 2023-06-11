@@ -31,10 +31,10 @@ jobs:
           }
 
           if ($branchName -eq "master" -or $branchName -eq "main") {
-            Write-Host "This is the default branch, so no package version suffix will be used."
+            echo "This is the default branch, so no package version suffix will be used."
           } else {
-            Write-Host "This is not the default branch, so a package version suffix will be used."
             $packageVersionSuffix = "preview-$env:GITHUB_RUN_ID"
+            echo "This is not the default branch, so a package version suffix: [$packageVersionSuffix] will be used."
           }
 
           echo "package-version-suffix=$packageVersionSuffix" >> $env:GITHUB_OUTPUT
@@ -52,13 +52,15 @@ jobs:
       - name: dotnet pack
         run: |
           cd $env:ProjectPath
-          if ($package_version_suffix){
-            & dotnet pack --configuration Release --no-build --no-restore --version-suffix $package_version_suffix
+          $suffix = $env:packageVersionSuffix
+          if ($suffix){
+            echo "Using version suffix: [$suffix]"
+            & dotnet pack --configuration Release --no-build --no-restore --version-suffix $suffix
           } else {
             & dotnet pack --configuration Release --no-build --no-restore
           }
         env:
-          package_version_suffix: ${{ steps.get-suffix.outputs.package-version-suffix }}
+          packageVersionSuffix: ${{ steps.get-suffix.outputs.package-version-suffix }}
         shell: pwsh
 
       - name: dotnet nuget push to nuget.org
