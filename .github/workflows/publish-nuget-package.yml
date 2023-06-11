@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@v1
 
       - name: setup-dotnet@v1
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
 
       - id: get-suffix
         name: Get package version suffix
