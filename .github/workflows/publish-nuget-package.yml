@@ -2,6 +2,13 @@ name: Publish NuGet package
 
 on: [push, pull_request]
 
+defaults:
+  run:
+    shell: pwsh
+
+env:
+  ProjectPath: src/MultiplexingDistributedCache
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,21 +38,20 @@ jobs:
           }
 
           echo "package-version-suffix=$packageVersionSuffix" >> $env:GITHUB_OUTPUT
-        shell: pwsh
 
       - name: dotnet build
         run: |
-          cd src/MultiplexingDistributedCache
-          dotnet build --configuration Release
+          cd $env:ProjectPath
+          & dotnet build --configuration Release
 
       - name: dotnet test
         run: |
-          cd src/MultiplexingDistributedCache
-          dotnet test
+          cd $env:ProjectPath
+          & dotnet test
 
       - name: dotnet pack
         run: |
-          cd src/MultiplexingDistributedCache
+          cd $env:ProjectPath
           if ($package_version_suffix){
             & dotnet pack --configuration Release --no-build --no-restore --version-suffix $package_version_suffix
           } else {
@@ -57,7 +63,7 @@ jobs:
 
       - name: dotnet nuget push to nuget.org
         run: >
-          dotnet nuget push ./src/MultiplexingDistributedCache/bin/Release/*.nupkg
+          & dotnet nuget push ./$env:ProjectPath/bin/Release/*.nupkg
           --skip-duplicate
           --source https://api.nuget.org/v3/index.json
           --api-key ${{ secrets.NUGET_ORG_PUBLISH_API_KEY }}
