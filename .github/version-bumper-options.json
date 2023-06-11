@@ -1,0 +1,29 @@
+{
+    "scheme": "semantic",
+    "versionFile": {
+        "path": "./src/MultiplexingDistributedCache/MultiplexingDistributedCache.csproj",
+        "line": 9
+    },
+    "files": [
+        {
+            "path": "./src/MultiplexingDistributedCache/MultiplexingDistributedCache.csproj",
+            "line": 9
+        }
+    ],
+    "rules": [
+        {
+            "trigger": "commit",
+            "bump": "build",
+            "suffix": "-preview"
+        },
+        {
+            "trigger": "commit",
+            "bump": "minor",
+            "branch": "master",
+            "reset": [
+                "build"
+            ],
+            "tag": true
+        }
+    ]
+}

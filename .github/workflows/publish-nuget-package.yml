@@ -13,6 +13,12 @@ jobs:
       - name: setup-dotnet@v1
         uses: actions/setup-dotnet@v1
 
+      - name: Version Bumper
+        uses: michmich112/version-bumper@1.2.0
+        with:
+          options-file: './.github/version-bumper-options.json'
+          github-token: ${{ secrets.GH_TOKEN }}
+
       - id: get-suffix
         name: Get package version suffix
         run: |
