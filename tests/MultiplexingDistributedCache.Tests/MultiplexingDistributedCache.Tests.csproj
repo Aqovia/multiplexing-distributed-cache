@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\MultiplexingRedisCache\MultiplexingDistributedCache.csproj" />
+    <ProjectReference Include="..\..\src\MultiplexingDistributedCache\MultiplexingDistributedCache.csproj" />
   </ItemGroup>
 
 </Project>

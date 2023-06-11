@@ -31,17 +31,17 @@ jobs:
 
       - name: Build
         run: |
-          cd src/MultiplexingRedisCache
+          cd src/MultiplexingDistributedCache
           dotnet build --configuration Release
 
       - name: Test
         run: |
-          cd src/MultiplexingRedisCache
+          cd src/MultiplexingDistributedCache
           dotnet test
 
       - name: Pack
         run: |
-          cd src/MultiplexingRedisCache
+          cd src/MultiplexingDistributedCache
           if ($package_version_suffix){
             & dotnet pack --configuration Release --no-build --no-restore --version-suffix $package_version_suffix
           } else {
@@ -53,7 +53,7 @@ jobs:
 
       - name: Push NuGet package to nuget.org
         run: >
-          dotnet nuget push ./src/MultiplexingRedisCache/bin/Release/*.nupkg
+          dotnet nuget push ./src/MultiplexingDistributedCache/bin/Release/*.nupkg
           --skip-duplicate
           --source https://api.nuget.org/v3/index.json
           --api-key ${{ secrets.NUGET_ORG_PUBLISH_API_KEY }}

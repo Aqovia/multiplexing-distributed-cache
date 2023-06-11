@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace Aqovia.MultiplexingDistributedCache
+namespace Aqovia.Cache
 {
     public class MultiplexingDistributedCache : IDistributedCache
     {

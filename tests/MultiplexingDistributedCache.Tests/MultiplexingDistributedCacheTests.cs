@@ -1,12 +1,12 @@
 using Xunit;
-using Aqovia.MultiplexingDistributedCache;
+using Aqovia.Cache;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Moq;
 using System;
 
-namespace MultiplexingRedisCache.Tests;
+namespace Aqovia.Cache.Tests;
 
 public class MultiplexingDistributedCacheTests
 {
