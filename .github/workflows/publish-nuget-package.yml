@@ -14,7 +14,7 @@ jobs:
         uses: actions/setup-dotnet@v1
 
       - name: Version Bumper
-        uses: michmich112/version-bumper@1.2.0
+        uses: michmich112/version-bumper@1.2.4
         with:
           options-file: './.github/version-bumper-options.json'
           github-token: ${{ secrets.GH_TOKEN }}
